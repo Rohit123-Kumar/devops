@@ -1,0 +1,69 @@
+1.Update
+	yum update -y
+2.Install Java:
+	yum install java-1.8.0-openjdk -y
+	java -version
+	readlink -f $(which java)
+3.Install jenkins
+		follow the document to install jenkins on amazon linux machine
+	https://medium.com/@mohan08p/install-and-configure-jenkins-on-amazon-ami-8617f0816444
+
+4.Configure jenkins
+(after login to jenkins)
+	manage jenkins ->manage plugins -> under available -> search for "deploy to container" , "maven integrator",maven scanner" plugins -> install without restart.
+	Manage jenkins ->global tool configureation -> in maven select latest version and select install automatically. apply and save. 
+		to build sample java application follow video link 
+				https://www.youtube.com/watch?v=6-VPlwkMIKA
+	
+4.Install and configure tomcat
+	wget http://apachemirror.wuchna.com/tomcat/tomcat-9/v9.0.34/bin/apache-tomcat-9.0.34.tar.gz
+	mv apache-tomcat-9.0.34.tar.gz /home/ec2-user/
+	cd /home/ec2-user/
+	tar -xvzf apache-tomcat-9.0.34.tar.gz
+		
+
+5.Configure tomcat-apache
+	
+	cd apache-tomcat-9.0.34	
+	cd conf
+	vi tomcat-users.xml
+		add following lines before last line </tomcat-users> then save and exit .
+		
+			 <role rolename="admin-gui"/>
+  			 <role rolename="admin-script"/>
+  			 <role rolename="manager-gui"/>
+  			 <role rolename="manager-status"/>
+ 			 <role rolename="manager-script"/>
+  			 <role rolename="manager-jmx"/>
+  			 <user name="admin" password="admin" roles="admin-gui,admin-script,manager-gui,manager-status,manager-script,manager-jmx"/>
+
+	cd server.xml
+		under connextor port change port number from 8080 to 9090 as jenkins is also use 8080. save and exit.
+
+	vi ../webapps/manager/META-INF/context.xml
+		comment the lines starting from valva to start of manager as shown below lines.
+			
+			<Context antiResourceLocking="false" privileged="true" >
+			<!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         			allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+			-->  <Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/>
+			</Context>
+
+	cd apacd apache-tomcat-9.0.34/bin/
+		do shutdown of tomcat server by running cmd 
+					./shutdown.sh
+		do startup of tomcat server by running cmd
+					./startup.sh
+
+	Open tomcat server on chrome as ec2 machine ip:9090
+	click on manage app -> login using username as admin and password admin
+
+
+ sudo apt install python3-pip
+    2  pip3 --version
+    3  pip install behave
+    4  apt install python-pip
+    5  pip install behave
+
+
+	
